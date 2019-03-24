@@ -26,12 +26,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     if (event is LoggedIn) {
       yield AuthLoading();
-      await webDipRepository.saveKey(event.key);
+      await webDipRepository.saveKey(key: event.key);
       yield AuthAuthenticated();
     }
 
     if (event is LoggedOut) {
       yield AuthLoading();
+      // TODO: find a place for this (or don't separate auth with key removal)
+      try {
+        await webDipRepository.deauthenticate();
+      } catch (_) {}
       await webDipRepository.removeKey();
       yield AuthUnauthenticated();
     }

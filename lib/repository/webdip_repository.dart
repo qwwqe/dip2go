@@ -1,5 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:dip2go/provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dip2go/model/model.dart';
 
 class WebDipRepository {
   final WebDipProvider webDipProvider;
@@ -7,27 +9,40 @@ class WebDipRepository {
   WebDipRepository({@required this.webDipProvider}) : assert(webDipProvider != null);
 
   Future<String> authenticate({@required String username, @required String password}) async {
-    return await webDipProvider.login(username, password);
+    return await webDipProvider.login(username: username, password: password);
   }
 
-  Future<void> removeKey() async {
-    // TODO: remove from keystore
-
-    await Future.delayed(Duration(seconds: 1));
+  Future<void> deauthenticate() async {
+    // TODO: this is stupid
+    var key = await getKey();
+    webDipProvider.logout(key: key);
+    await removeKey();
     return;
   }
 
-  Future<void> saveKey(String key) async {
-    // TODO: save to keystore
+  Future<List<WebDipGame>> getGameList({@required String key}) async {
 
-    await Future.delayed(Duration(seconds: 1));
+  }
+
+  Future<void> removeKey() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(webDipProvider.webDipAuthCookie);
+    return;
+  }
+
+  Future<void> saveKey({@required String key}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(webDipProvider.webDipAuthCookie, key);
     return;
   }
 
   Future<bool> hasKey() async {
-    // TODO: implement
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getKeys().contains(webDipProvider.webDipAuthCookie);
+  }
 
-    await Future.delayed(Duration(seconds: 1));
-    return false;
+  Future<String> getKey() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.get(webDipProvider.webDipAuthCookie);
   }
 }
