@@ -5,9 +5,9 @@ import 'package:dip2go/repository/repository.dart';
 import 'package:dip2go/auth/auth.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final WebDipRepository webDipRepository;
+  final DipRepository dipRepository;
 
-  AuthBloc({@required this.webDipRepository}) : assert(webDipRepository != null);
+  AuthBloc({@required this.dipRepository}) : assert(dipRepository != null);
 
   @override
   AuthState get initialState => AuthUninitialized();
@@ -15,7 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   @override
   Stream<AuthState> mapEventToState(AuthState currentState, AuthEvent event) async* {
     if (event is AppStarted) {
-      bool hasKey = await webDipRepository.hasKey();
+      bool hasKey = await dipRepository.hasToken();
 
       if (hasKey) {
         yield AuthAuthenticated();
@@ -26,17 +26,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     if (event is LoggedIn) {
       yield AuthLoading();
-      await webDipRepository.saveKey(key: event.key);
+      await dipRepository.saveToken(token: event.token);
       yield AuthAuthenticated();
     }
 
     if (event is LoggedOut) {
       yield AuthLoading();
-      // TODO: find a place for this (or don't separate auth with key removal)
+      // TODO: find a place for this (or don't separate auth and token removal)
       try {
-        await webDipRepository.deauthenticate();
+        await dipRepository.deauthenticate();
       } catch (_) {}
-      await webDipRepository.removeKey();
+      await dipRepository.removeToken();
       yield AuthUnauthenticated();
     }
   }

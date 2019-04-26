@@ -11,12 +11,12 @@ class AppStarted extends AuthEvent {
 }
 
 class LoggedIn extends AuthEvent {
-  final String key;
+  final String token;
 
-  LoggedIn({@required this.key}) : super([key]);
+  LoggedIn({@required this.token}) : super([token]);
 
   @override
-  String toString() => 'LoggedIn (Key: $key)';
+  String toString() => 'LoggedIn (Key: $token)';
 }
 
 class LoggedOut extends AuthEvent {

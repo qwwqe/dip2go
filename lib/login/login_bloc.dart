@@ -6,11 +6,11 @@ import 'package:dip2go/auth/auth.dart';
 import 'package:dip2go/repository/repository.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final WebDipRepository webDipRepository;
+  final DipRepository dipRepository;
   final AuthBloc authBloc;
 
-  LoginBloc({@required this.webDipRepository, @required this.authBloc}) :
-      assert(webDipRepository != null),
+  LoginBloc({@required this.dipRepository, @required this.authBloc}) :
+      assert(dipRepository != null),
       assert(authBloc != null);
 
   @override
@@ -22,8 +22,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield LoginLoading();
 
       try {
-        final key = await webDipRepository.authenticate(username: event.username, password: event.password);
-        authBloc.dispatch(LoggedIn(key: key));
+        final token = await dipRepository.authenticate(username: event.username, password: event.password);
+        authBloc.dispatch(LoggedIn(token: token));
         yield LoginInit();
       } catch (error) {
         yield LoginFailure(error: error.toString());

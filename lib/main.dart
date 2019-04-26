@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:io';
 import 'package:dip2go/common/common.dart';
 import 'package:dip2go/home/home.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,15 +20,15 @@ class PrintTransitionDelegate extends BlocDelegate {
 void main() {
   BlocSupervisor().delegate = PrintTransitionDelegate();
   runApp(MainApp(
-      webDipRepository:
-        WebDipRepository(webDipProvider: WebDipProvider(httpClient: HttpClient()))
+      dipRepository:
+        DipRepository(dipProvider: DipProvider(httpClient: http.Client()))
   ));
 }
 
 class MainApp extends StatefulWidget {
-  final WebDipRepository webDipRepository;
+  final DipRepository dipRepository;
 
-  MainApp({Key key, @required this.webDipRepository}) : super(key: key);
+  MainApp({Key key, @required this.dipRepository}) : super(key: key);
 
   @override
   _MainAppState createState() => _MainAppState();
@@ -38,11 +37,11 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   AuthBloc authBloc;
 
-  WebDipRepository get webDipRepository => widget.webDipRepository;
+  DipRepository get dipRepository => widget.dipRepository;
 
   @override
   void initState() {
-    authBloc = AuthBloc(webDipRepository: webDipRepository);
+    authBloc = AuthBloc(dipRepository: dipRepository);
     authBloc.dispatch(AppStarted());
   }
 
@@ -69,7 +68,7 @@ class _MainAppState extends State<MainApp> {
             }
 
             if (state is AuthUnauthenticated) {
-              return LoginPage(webDipRepository: webDipRepository);
+              return LoginPage(dipRepository: dipRepository);
             }
 
             if (state is AuthLoading) {

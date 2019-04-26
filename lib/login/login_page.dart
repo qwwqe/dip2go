@@ -8,10 +8,10 @@ import 'package:dip2go/login/login.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
-  final WebDipRepository webDipRepository;
+  final DipRepository dipRepository;
 
-  LoginPage({Key key, @required this.webDipRepository}) :
-        assert(webDipRepository != null), super(key: key);
+  LoginPage({Key key, @required this.dipRepository}) :
+        assert(dipRepository != null), super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -21,13 +21,13 @@ class _LoginPageState extends State<LoginPage> {
   LoginBloc _loginBloc;
   AuthBloc _authBloc;
 
-  WebDipRepository get _webDipRepository => widget.webDipRepository;
+  DipRepository get _dipRepository => widget.dipRepository;
 
   @override
   void initState() {
     _authBloc = BlocProvider.of<AuthBloc>(context);
     _loginBloc = LoginBloc(
-      webDipRepository: _webDipRepository,
+      dipRepository: _dipRepository,
       authBloc: _authBloc,
     );
     super.initState();
