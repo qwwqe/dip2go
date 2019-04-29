@@ -53,10 +53,13 @@ class DipProvider {
     }
   }
 
-  Future<List<DipGame>> getGameList({@required String token}) async {
+  Future<List<DipGame>> getGameList({@required String token, @required String type}) async {
     var payload = {
       "action": "list",
       "token": token,
+      "data": {
+        "type": type,
+      }
     };
     var resp = await httpClient.post(DIP_AUTHORITY + DIP_GAME_API, body: jsonEncode(payload));
     if (resp.statusCode != 200) {

@@ -21,9 +21,9 @@ class DipRepository {
     return;
   }
 
-  Future<List<DipGame>> getGameList({@required String token}) async {
+  Future<List<DipGame>> getGameList({@required String token, @required String type}) async {
     var token = await getToken();
-    return await dipProvider.getGameList(token: token);
+    return await dipProvider.getGameList(token: token, type: type);
   }
 
   Future<void> removeToken() async {
@@ -47,4 +47,6 @@ class DipRepository {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.get(AUTH_TOKEN);
   }
+
+
 }

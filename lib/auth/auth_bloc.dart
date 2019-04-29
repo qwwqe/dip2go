@@ -35,7 +35,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // TODO: find a place for this (or don't separate auth and token removal)
       try {
         await dipRepository.deauthenticate();
-      } catch (_) {}
+      } catch (e) {
+        print("Error on deauthentication: ${e.toString()}");
+      }
       await dipRepository.removeToken();
       yield AuthUnauthenticated();
     }

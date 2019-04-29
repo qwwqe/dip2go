@@ -64,7 +64,7 @@ class _MainAppState extends State<MainApp> {
             }
 
             if (state is AuthAuthenticated) {
-              return GameListPage();
+              return GameListPage(dipRepository: dipRepository);
             }
 
             if (state is AuthUnauthenticated) {

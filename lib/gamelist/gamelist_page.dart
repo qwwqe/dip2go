@@ -6,9 +6,9 @@ import 'package:dip2go/auth/auth.dart';
 import 'package:dip2go/repository/repository.dart';
 
 class GameListPage extends StatefulWidget {
-  //final WebDipRepository webDipRepository; // TODO: unused
+  final DipRepository dipRepository;
 
-  //HomePage({Key key, @required this.webDipRepository}) : assert(webDipRepository != null), super(key: key);
+  GameListPage({Key key, @required this.dipRepository}) : assert(dipRepository != null), super(key: key);
 
   @override
   _GameListPage createState() => _GameListPage();
