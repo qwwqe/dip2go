@@ -44,45 +44,51 @@ class _LoginFormState extends State<LoginForm> {
             });
           }
 
-          return Form(
-            key: _formKey,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextFormField(
-                      controller: _usernameController,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please dip 2 go';
-                        }
-                      }),
-                  TextFormField(
-                      controller: _passwordController,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'I told you to dip';
-                        }
-                      },
-                      obscureText: true),
-                  RaisedButton(
-                      child: Text("Dip"),
-                      onPressed: () {
-                        if(_formKey.currentState.validate()) {
-                          if (state is! LoginLoading) {
-                            _loginBloc.dispatch(LoginButtonPressed(
-                              username: _usernameController.text,
-                              password: _passwordController.text,
-                            ));
+          return Container(
+            padding:
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(labelText: "Username"),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please dip 2 go';
                           }
-                        }
-                      }),
-                  Container(
-                    child: state is LoginLoading
-                        ? CircularProgressIndicator()
-                        : null,
-                  ),
-                ]),
+                        }),
+                    TextFormField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(labelText: "Password"),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'I told you to dip';
+                          }
+                        },
+                        obscureText: true),
+                    RaisedButton(
+                        child: Text("Dip"),
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            if (state is! LoginLoading) {
+                              _loginBloc.dispatch(LoginButtonPressed(
+                                username: _usernameController.text,
+                                password: _passwordController.text,
+                              ));
+                            }
+                          }
+                        }),
+                    Container(
+                      child: state is LoginLoading
+                          ? CircularProgressIndicator()
+                          : null,
+                    ),
+                  ]),
+            ),
           );
         });
   }

@@ -7,11 +7,8 @@ import 'package:dip2go/repository/repository.dart';
 
 class GameListBloc extends Bloc<GameListEvent, GameListState> {
   final DipRepository dipRepository;
-  final AuthBloc authBloc;
 
-  GameListBloc({@required this.dipRepository, @required this.authBloc}) :
-        assert(dipRepository != null),
-        assert(authBloc != null);
+  GameListBloc({@required this.dipRepository}) : assert(dipRepository != null);
 
   @override
   GameListState get initialState => GameListLoading();

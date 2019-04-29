@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dip2go/common/common.dart';
 import 'package:dip2go/auth/auth.dart';
 import 'package:dip2go/repository/repository.dart';
+import 'package:dip2go/gamelist/gamelist.dart';
 
 class GameListPage extends StatefulWidget {
   final DipRepository dipRepository;
@@ -16,22 +17,42 @@ class GameListPage extends StatefulWidget {
 
 class _GameListPage extends State<GameListPage> {
 
+  DipRepository get dipRepository => widget.dipRepository;
+
   @override
   Widget build(BuildContext context) {
-    final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-    return Scaffold(
-      appBar: AppBar(
-          title: Text("Dip 2 Go")
-      ),
-      body: Center(
-        child: Column(
-            children: <Widget>[
-              GameList(),
-              RaisedButton(
-                  child: Text("Quit Dippin'"),
-                  onPressed: () => authBloc.dispatch(LoggedOut()),
-              ),
-            ]
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () => authBloc.dispatch(LoggedOut()),
+            ),
+          ],
+          bottom: TabBar(
+            tabs: [
+              Text("Active Games"),
+              Text("Old Games"),
+              Text("All Games"),
+            ],
+          ),
+          title: Text("Dippin' Doodle"),
+        ),
+        body: TabBarView(
+          children: [
+            GameListTab(dipRepository: dipRepository, type: "active"),
+            GameListTab(dipRepository: dipRepository, type: "old"),
+            GameListTab(dipRepository: dipRepository, type: "all"),
+            /*
+            RaisedButton(
+              child: Text("Quit Dippin'"),
+              onPressed: () => authBloc.dispatch(LoggedOut()),
+            ),
+            */
+          ],
         ),
       ),
     );

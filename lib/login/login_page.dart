@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("dip2login"),
+          title: Text("dip2go"),
         ),
         body: LoginForm(
           authBloc: _authBloc,

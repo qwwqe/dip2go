@@ -58,7 +58,7 @@ class DipProvider {
       "action": "list",
       "token": token,
       "data": {
-        "type": type,
+        "game_list_type": type,
       }
     };
     var resp = await httpClient.post(DIP_AUTHORITY + DIP_GAME_API, body: jsonEncode(payload));
