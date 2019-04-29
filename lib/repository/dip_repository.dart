@@ -22,7 +22,8 @@ class DipRepository {
   }
 
   Future<List<DipGame>> getGameList({@required String token}) async {
-
+    var token = await getToken();
+    return await dipProvider.getGameList(token: token);
   }
 
   Future<void> removeToken() async {

@@ -5,16 +5,16 @@ import 'package:dip2go/common/common.dart';
 import 'package:dip2go/auth/auth.dart';
 import 'package:dip2go/repository/repository.dart';
 
-class HomePage extends StatefulWidget {
+class GameListPage extends StatefulWidget {
   //final WebDipRepository webDipRepository; // TODO: unused
 
   //HomePage({Key key, @required this.webDipRepository}) : assert(webDipRepository != null), super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _GameListPage createState() => _GameListPage();
 }
 
-class _HomePageState extends State<HomePage> {
+class _GameListPage extends State<GameListPage> {
 
   @override
   Widget build(BuildContext context) {

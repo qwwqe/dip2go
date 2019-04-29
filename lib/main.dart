@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:dip2go/common/common.dart';
-import 'package:dip2go/home/home.dart';
+import 'package:dip2go/gamelist/gamelist.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dip2go/splash/splash.dart';
 import 'package:bloc/bloc.dart';
@@ -64,7 +64,7 @@ class _MainAppState extends State<MainApp> {
             }
 
             if (state is AuthAuthenticated) {
-              return HomePage();
+              return GameListPage();
             }
 
             if (state is AuthUnauthenticated) {

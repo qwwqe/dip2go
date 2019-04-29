@@ -3,14 +3,13 @@ import 'package:dip2go/model/model.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
 
 class DipProvider {
   static const String DIP_AUTHORITY = "http://192.168.0.108:9696";
   static const String DIP_LOGON_API = "/logon";
   static const String DIP_LOGOUT_API = "/logon";
   static const String DIP_COMMAND_API = "/command";
+  static const String DIP_GAME_API = "/game";
 
   final http.Client httpClient;
 
@@ -35,29 +34,7 @@ class DipProvider {
       throw("Error while attempting login (${data['error']})");
     }
 
-    return data['token'];
-    /*
-    req.headers.set('content-type', 'application/json');
-    req.add(utf8.encode(json.encode(params)));
-    var resp = await req.close();
-    if (resp.statusCode != 200) {
-      resp.drain();
-      throw("Error while attempting login (${resp.statusCode}).");
-    }
-
-    Map<String, dynamic> data;
-    var completer = new Completer();
-    resp.transform(utf8.decoder).listen((contents) {
-      data = jsonDecode(contents);
-    }, onDone: () {
-      if (data['success'] != "ok") {
-        throw("Error while attempting login (${data['error']}).");
-      }
-      completer.complete(data['token']);
-    });
-
-    return completer.future;
-    */
+    return data['data']['token'];
   }
 
   Future<void> logout({@required String token}) async {
@@ -72,22 +49,30 @@ class DipProvider {
 
     var data = jsonDecode(resp.body);
     if (data['success'] != 'ok') {
-      throw("Error while attempting logout (${data['error']})");
+      throw("Error while attempting logout (${data['error']}).");
     }
-
-    /*
-    var resp = await req.close();
-    if (resp.statusCode != 200) {
-      resp.drain();
-      throw("Error while attempting logout (${resp.statusCode}).");
-    }
-
-    await resp.drain();
-    return;
-    */
   }
 
   Future<List<DipGame>> getGameList({@required String token}) async {
+    var payload = {
+      "action": "list",
+      "token": token,
+    };
+    var resp = await httpClient.post(DIP_AUTHORITY + DIP_GAME_API, body: jsonEncode(payload));
+    if (resp.statusCode != 200) {
+      throw("Error while requesting game list (${resp.statusCode}).");
+    }
 
+    var data = jsonDecode(resp.body);
+    if (data['success'] != 'ok') {
+      throw("Error while requesting game list (${data['error']}).");
+    }
+
+    List<DipGame> games = [];
+    for(int i = 0; i < data['data']['games'].length; i++) {
+      games.add(new DipGame.fromJson(data['data']['games'][i]));
+    }
+
+    return games;
   }
 }
