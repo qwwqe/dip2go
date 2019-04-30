@@ -4,12 +4,19 @@ import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+class DipUnauthorizedException implements Exception {
+  String message;
+  DipUnauthorizedException(this.message);
+}
+
 class DipProvider {
   static const String DIP_AUTHORITY = "http://192.168.0.108:9696";
   static const String DIP_LOGON_API = "/logon";
   static const String DIP_LOGOUT_API = "/logon";
   static const String DIP_COMMAND_API = "/command";
   static const String DIP_GAME_API = "/game";
+
+  static const int DIP_API_UNAUTH_ERR = 2;
 
   final http.Client httpClient;
 
@@ -31,7 +38,7 @@ class DipProvider {
 
     var data = jsonDecode(resp.body);
     if (data['success'] != 'ok') {
-      throw("Error while attempting login (${data['error']})");
+      throw("Error while attempting login (${data['error']['message']})");
     }
 
     return data['data']['token'];
@@ -49,7 +56,7 @@ class DipProvider {
 
     var data = jsonDecode(resp.body);
     if (data['success'] != 'ok') {
-      throw("Error while attempting logout (${data['error']}).");
+      throw("Error while attempting logout (${data['error']['message']}).");
     }
   }
 
@@ -68,10 +75,16 @@ class DipProvider {
 
     var data = jsonDecode(resp.body);
     if (data['success'] != 'ok') {
-      throw("Error while requesting game list (${data['error']}).");
+      print(data['error']['code']);
+      if (data['error']['code'] == DIP_API_UNAUTH_ERR) {
+        throw DipUnauthorizedException(data['error']['message']);
+      } else {
+        throw("Error while requesting game list (${data['error']['message']}).");
+      }
     }
 
     List<DipGame> games = [];
+    print(data['data']['games']);
     for(int i = 0; i < data['data']['games'].length; i++) {
       games.add(new DipGame.fromJson(data['data']['games'][i]));
     }

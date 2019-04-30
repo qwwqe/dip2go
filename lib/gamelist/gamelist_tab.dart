@@ -19,13 +19,15 @@ class GameListTab extends StatefulWidget {
 
 class _GameListTab extends State<GameListTab> {
   GameListBloc _gameListBloc;
+  AuthBloc _authBloc;
 
   DipRepository get _dipRepository => widget.dipRepository;
   String get _type => widget.type;
 
   @override
   void initState() {
-    _gameListBloc = GameListBloc(dipRepository: _dipRepository);
+    _authBloc = BlocProvider.of<AuthBloc>(context);
+    _gameListBloc = GameListBloc(dipRepository: _dipRepository, authBloc: _authBloc);
     _gameListBloc.dispatch(GetGameList(type: _type));
     super.initState();
   }

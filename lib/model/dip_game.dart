@@ -18,12 +18,12 @@ class DipGame {
   String phase;
 
   @JsonKey(name: 'time_remaining')
-  Duration timeRemaining;
+  String timeRemaining;
 
-  //@JsonKey(name: 'users')
-  //List<DipUser> users;
+  @JsonKey(name: 'players')
+  List<DipPlayer> players;
 
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'game_id')
   String gameId;
 
   @JsonKey(name: 'variant_id')

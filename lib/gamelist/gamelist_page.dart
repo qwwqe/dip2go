@@ -42,6 +42,7 @@ class _GameListPage extends State<GameListPage> {
           title: Text("Dippin' Doodle"),
         ),
         body: TabBarView(
+          // TODO: the network calls inside these tabs should go outside
           children: [
             GameListTab(dipRepository: dipRepository, type: "active"),
             GameListTab(dipRepository: dipRepository, type: "old"),
