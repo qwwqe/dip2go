@@ -39,6 +39,7 @@ class _GameListPage extends State<GameListPage> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: add pull-down refresh feature (RefreshIndicator)
     return DefaultTabController(
       length: 3,
       child: Scaffold(
