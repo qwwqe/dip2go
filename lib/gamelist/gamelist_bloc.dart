@@ -26,7 +26,7 @@ class GameListBloc extends Bloc<GameListEvent, GameListState> {
         // TODO: just make the token internal to DipRepository?
         final token = await dipRepository.getToken();
         final gameList = await dipRepository.getGameList(
-            token: token, type: event.type);
+            token: token);
         yield GameListLoaded(gameList: gameList);
       } on DipUnauthorizedException {
         // TODO: maybe display a toast or something

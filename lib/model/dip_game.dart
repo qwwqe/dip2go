@@ -32,6 +32,9 @@ class DipGame {
   @JsonKey(name: 'variant_name')
   String variantName;
 
+  @JsonKey(name: 'state')
+  String state;
+
   factory DipGame.fromJson(Map<String, dynamic> json) => _$DipGameFromJson(json);
 
   Map<String, dynamic> toJson() => _$DipGameToJson(this);

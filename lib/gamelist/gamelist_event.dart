@@ -6,10 +6,6 @@ abstract class GameListEvent extends Equatable {
 }
 
 class GetGameList extends GameListEvent {
-  final String type;
-
-  GetGameList({@required this.type}) : assert(type != null), super([type]);
-
   @override
-  String toString() => "GetGameList ($type)";
+  String toString() => "GetGameList";
 }

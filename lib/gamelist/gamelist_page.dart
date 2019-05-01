@@ -5,6 +5,7 @@ import 'package:dip2go/common/common.dart';
 import 'package:dip2go/auth/auth.dart';
 import 'package:dip2go/repository/repository.dart';
 import 'package:dip2go/gamelist/gamelist.dart';
+import 'package:dip2go/model/model.dart';
 
 class GameListPage extends StatefulWidget {
   final DipRepository dipRepository;
@@ -16,12 +17,28 @@ class GameListPage extends StatefulWidget {
 }
 
 class _GameListPage extends State<GameListPage> {
+  AuthBloc _authBloc;
+  GameListBloc _gameListBloc;
+  List<DipGame> _games;
 
-  DipRepository get dipRepository => widget.dipRepository;
+  DipRepository get _dipRepository => widget.dipRepository;
+
+  @override
+  void initState() {
+    _authBloc = BlocProvider.of<AuthBloc>(context);
+    _gameListBloc = GameListBloc(dipRepository: _dipRepository, authBloc: _authBloc);
+    _gameListBloc.dispatch(GetGameList());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _gameListBloc.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final authBloc = BlocProvider.of<AuthBloc>(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -29,7 +46,7 @@ class _GameListPage extends State<GameListPage> {
           actions: [
             IconButton(
               icon: Icon(Icons.exit_to_app),
-              onPressed: () => authBloc.dispatch(LoggedOut()),
+              onPressed: () => _authBloc.dispatch(LoggedOut()),
             ),
           ],
           bottom: TabBar(
@@ -41,19 +58,31 @@ class _GameListPage extends State<GameListPage> {
           ),
           title: Text("Dippin' Doodle"),
         ),
-        body: TabBarView(
-          // TODO: the network calls inside these tabs should go outside
-          children: [
-            GameListTab(dipRepository: dipRepository, type: "active"),
-            GameListTab(dipRepository: dipRepository, type: "old"),
-            GameListTab(dipRepository: dipRepository, type: "all"),
-            /*
-            RaisedButton(
-              child: Text("Quit Dippin'"),
-              onPressed: () => authBloc.dispatch(LoggedOut()),
-            ),
-            */
-          ],
+        body: BlocBuilder<GameListEvent, GameListState>(
+          bloc: _gameListBloc,
+          builder: (BuildContext context, GameListState state) {
+            if (state is GameListLoading) {
+              return LoadingIndicator();
+            }
+
+            if (state is GameListLoaded) {
+              _games = state.gameList;
+              return TabBarView(
+                children: [
+                  GameList(games: _games.where((g) => g.state == "active").toList()),
+                  GameList(games: _games.where((g) => g.state == "old").toList()),
+                  GameList(games: _games),
+                ],
+              );
+            }
+
+            if (state is GameListFailure) {
+              //Scaffold.of(context).showSnackBar(SnackBar(content: Text("Failed to load game list.")));
+              return Center(
+                child: Icon(Icons.error),
+              );
+            }
+          },
         ),
       ),
     );
