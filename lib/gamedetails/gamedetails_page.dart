@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dip2go/model/model.dart';
+import 'package:dip2go/gamewidget/gamewidget.dart';
 
 class GameDetailsPage extends StatefulWidget {
   final DipGame game;
@@ -19,8 +20,25 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
         appBar: AppBar(
           title: Text(_game.title),
         ),
-        body: Center(
-          child: Text(_game.phase),
+        body: Column(
+          children: [
+            Expanded(
+              flex: 4,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                child: GameWidget(
+                  fullscreen: false,
+                  game: _game,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 5,
+              child: Center(
+                child: Text(_game.phase),
+              )
+            ),
+          ],
         ),
     );
   }
