@@ -52,9 +52,9 @@ class _GameListPage extends State<GameListPage> {
           ],
           bottom: TabBar(
             tabs: [
-              Text("Active Games"),
-              Text("Old Games"),
-              Text("All Games"),
+              Text("Active"),
+              Text("Old"),
+              Text("Recruiting"),
             ],
           ),
           title: Text("Dippin' Doodle"),
@@ -72,7 +72,7 @@ class _GameListPage extends State<GameListPage> {
                 children: [
                   GameList(games: _games.where((g) => g.state == "active").toList()),
                   GameList(games: _games.where((g) => g.state == "old").toList()),
-                  GameList(games: _games),
+                  GameList(games: _games.where((g) => g.state == "recruiting").toList()),
                 ],
               );
             }
