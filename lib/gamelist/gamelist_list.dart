@@ -4,6 +4,7 @@ import 'package:dip2go/auth/auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dip2go/common/common.dart';
 import 'package:dip2go/model/model.dart';
+import 'package:dip2go/gamedetails/gamedetails.dart';
 import 'gamelist.dart';
 
 class GameList extends StatelessWidget {
@@ -17,6 +18,15 @@ class GameList extends StatelessWidget {
             child: ListTile(
                 title: Text(games[index].title),
                 trailing: Icon(Icons.keyboard_arrow_right),
-                subtitle: Text(games[index].phase)),
+                subtitle: Text(games[index].phase),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GameDetailsPage(
+                      game: games[index],
+                    )
+                  ),
+                ),
+            ),
           ));
 }

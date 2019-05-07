@@ -4,17 +4,46 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dip2go/model/model.dart';
 
 class DipRepository {
-  static const String AUTH_TOKEN = "authToken";
+  static const String AUTH_TOKEN_KEY = "authToken";
+  String authToken;
   final DipProvider dipProvider;
 
   DipRepository({@required this.dipProvider}) : assert(dipProvider != null);
 
+  Future<String> getToken() async {
+    if (authToken != null) {
+      return authToken;
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String _authToken = prefs.get(AUTH_TOKEN_KEY);
+    if (_authToken != null) {
+      authToken = _authToken;
+    }
+    return authToken;
+  }
+
+  Future<String> saveToken({@required String token}) async {
+    authToken = token;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(AUTH_TOKEN_KEY, token);
+    return authToken;
+  }
+
+  Future<void> removeToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(AUTH_TOKEN_KEY);
+    authToken = null;
+    return;
+  }
+
+
   Future<String> authenticate({@required String username, @required String password}) async {
-    return await dipProvider.login(username: username, password: password);
+    String _authToken = await dipProvider.login(username: username, password: password);
+    return await saveToken(token: _authToken);
   }
 
   Future<void> deauthenticate() async {
-    // TODO: this is stupid. maybe save the token as a field. could we make sure that's always up-to-date?
     var token = await getToken();
     dipProvider.logout(token: token);
     await removeToken();
@@ -26,27 +55,8 @@ class DipRepository {
     return await dipProvider.getGameList(token: token);
   }
 
-  Future<void> removeToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove(AUTH_TOKEN);
-    return;
-  }
-
-  Future<void> saveToken({@required String token}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(AUTH_TOKEN, token);
-    return;
-  }
-
   Future<bool> hasToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getKeys().contains(AUTH_TOKEN);
+    return getToken() != null;
   }
-
-  Future<String> getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.get(AUTH_TOKEN);
-  }
-
 
 }

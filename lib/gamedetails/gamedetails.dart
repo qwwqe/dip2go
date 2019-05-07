@@ -1,0 +1,1 @@
+export 'gamedetails_page.dart';

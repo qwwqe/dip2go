@@ -22,10 +22,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield LoginLoading();
 
       try {
+        print("FOO");
         final token = await dipRepository.authenticate(username: event.username, password: event.password);
+        print("BAR");
         authBloc.dispatch(LoggedIn(token: token));
         yield LoginInit();
       } catch (error) {
+        print("ZAP");
         yield LoginFailure(error: error.toString());
       }
     }
